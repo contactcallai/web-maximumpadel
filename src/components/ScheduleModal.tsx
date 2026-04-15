@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { X, Calendar, Clock } from 'lucide-react';
+import { X, Calendar } from 'lucide-react';
 import './ResultModal.css'; // Reusing common modal styles
 
 interface ScheduleModalProps {

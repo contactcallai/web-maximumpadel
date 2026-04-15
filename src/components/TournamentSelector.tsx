@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ChevronDown, Trophy } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import './TournamentSelector.css';
 
 interface Tournament {

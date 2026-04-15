@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Download, UploadCloud, ChevronDown, Trophy, Calendar, MapPin } from 'lucide-react';
+import { Download, UploadCloud, Trophy, Calendar, MapPin } from 'lucide-react';
 import ResultModal from '../components/ResultModal';
 import ScheduleModal from '../components/ScheduleModal';
 import CourtModal from '../components/CourtModal';
