@@ -16,6 +16,8 @@ export default function Cuadros() {
     const [activeCategoryId, setActiveCategoryId] = useState<string>("");
     const [activeModal, setActiveModal] = useState<'none' | 'schedule' | 'result' | 'court'>('none');
     const [selectedMatch, setSelectedMatch] = useState<{ matchId: string, t1Id: string, t2Id: string, team1: string, team2: string, result: string, date: string, court: string, categoryId: string, groupId?: number } | null>(null);
+    const [draggedTeam, setDraggedTeam] = useState<{ groupIndex: number, teamIdx: number } | null>(null);
+    const [dragOverTeam, setDragOverTeam] = useState<{ groupIndex: number, teamIdx: number } | null>(null);
 
     useEffect(() => {
         const t = TOURNAMENTS_DATA.find(t => t.id === tournamentId) || TOURNAMENTS_DATA[0];
@@ -235,6 +237,107 @@ export default function Cuadros() {
         setActiveModal('none');
     };
 
+    const handleDragStart = (groupIndex: number, teamIdx: number) => {
+        setDraggedTeam({ groupIndex, teamIdx });
+    };
+
+    const handleDragOver = (e: React.DragEvent, groupIndex: number, teamIdx: number) => {
+        e.preventDefault();
+        if (draggedTeam && (draggedTeam.groupIndex !== groupIndex || draggedTeam.teamIdx !== teamIdx)) {
+            setDragOverTeam({ groupIndex, teamIdx });
+        }
+    };
+
+    const handleDragLeave = () => {
+        setDragOverTeam(null);
+    };
+
+    const handleDrop = (e: React.DragEvent, targetGroupIndex: number, targetTeamIdx: number) => {
+        e.preventDefault();
+        if (!draggedTeam) return;
+
+        const { groupIndex: sourceGroupIdx, teamIdx: sourceTeamIdx } = draggedTeam;
+        
+        if (sourceGroupIdx === targetGroupIndex && sourceTeamIdx === targetTeamIdx) {
+            setDraggedTeam(null);
+            setDragOverTeam(null);
+            return;
+        }
+
+        const newTournament = { ...tournament, cuadros: { ...tournament.cuadros } };
+        const categoryCuadros = { ...newTournament.cuadros[activeCategoryId] };
+        newTournament.cuadros[activeCategoryId] = categoryCuadros;
+
+        const groups = [...categoryCuadros.groups];
+        categoryCuadros.groups = groups;
+
+        if (sourceGroupIdx === targetGroupIndex) {
+            // Internal swap within the same group
+            const group = { ...groups[sourceGroupIdx] };
+            groups[sourceGroupIdx] = group;
+            
+            const teamIds = [...group.teamIds];
+            const sourceTeamId = teamIds[sourceTeamIdx];
+            const targetTeamId = teamIds[targetTeamIdx];
+            
+            // Swap IDs in teamIds array
+            [teamIds[sourceTeamIdx], teamIds[targetTeamIdx]] = [teamIds[targetTeamIdx], teamIds[sourceTeamIdx]];
+            group.teamIds = teamIds;
+
+            // Swap IDs in matches array (teams swap roles/schedules)
+            group.matches = group.matches.map((m: any) => {
+                let nm = { ...m };
+                if (nm.homeId === sourceTeamId) nm.homeId = 'TEMP_SWAP_ID';
+                if (nm.awayId === sourceTeamId) nm.awayId = 'TEMP_SWAP_ID';
+                
+                if (nm.homeId === targetTeamId) nm.homeId = sourceTeamId;
+                if (nm.awayId === targetTeamId) nm.awayId = sourceTeamId;
+                
+                if (nm.homeId === 'TEMP_SWAP_ID') nm.homeId = targetTeamId;
+                if (nm.awayId === 'TEMP_SWAP_ID') nm.awayId = targetTeamId;
+                return nm;
+            });
+        } else {
+            // Cross-group swap
+            const sourceGroup = { ...groups[sourceGroupIdx] };
+            const targetGroup = { ...groups[targetGroupIndex] };
+            groups[sourceGroupIdx] = sourceGroup;
+            groups[targetGroupIndex] = targetGroup;
+            
+            const sourceTeamIds = [...sourceGroup.teamIds];
+            const targetTeamIds = [...targetGroup.teamIds];
+            
+            const sourceTeamId = sourceTeamIds[sourceTeamIdx];
+            const targetTeamId = targetTeamIds[targetTeamIdx];
+            
+            // Swap IDs in respective arrays
+            sourceTeamIds[sourceTeamIdx] = targetTeamId;
+            targetTeamIds[targetTeamIdx] = sourceTeamId;
+            
+            sourceGroup.teamIds = sourceTeamIds;
+            targetGroup.teamIds = targetTeamIds;
+
+            // Update matches to reflect the swap (source team now plays target's schedule/slot and vice versa)
+            sourceGroup.matches = sourceGroup.matches.map((m: any) => {
+                let nm = { ...m };
+                if (nm.homeId === sourceTeamId) nm.homeId = targetTeamId;
+                else if (nm.awayId === sourceTeamId) nm.awayId = targetTeamId;
+                return nm;
+            });
+
+            targetGroup.matches = targetGroup.matches.map((m: any) => {
+                let nm = { ...m };
+                if (nm.homeId === targetTeamId) nm.homeId = sourceTeamId;
+                else if (nm.awayId === targetTeamId) nm.awayId = sourceTeamId;
+                return nm;
+            });
+        }
+
+        setTournament(newTournament);
+        setDraggedTeam(null);
+        setDragOverTeam(null);
+    };
+
     const renderGroupTable = (group: any, groupIndex: number) => {
         return (
             <div key={group.name} className="group-table-container">
@@ -253,7 +356,14 @@ export default function Cuadros() {
                     <tbody>
                         {group.teamIds.map((t1Id: string, rowIdx: number) => (
                             <tr key={t1Id}>
-                                <th className="row-header">
+                                <th 
+                                    className={`row-header draggable ${draggedTeam?.groupIndex === groupIndex && draggedTeam?.teamIdx === rowIdx ? 'dragging' : ''} ${dragOverTeam?.groupIndex === groupIndex && dragOverTeam?.teamIdx === rowIdx ? 'drag-over' : ''}`}
+                                    draggable="true"
+                                    onDragStart={() => handleDragStart(groupIndex, rowIdx)}
+                                    onDragOver={(e) => handleDragOver(e, groupIndex, rowIdx)}
+                                    onDragLeave={handleDragLeave}
+                                    onDrop={(e) => handleDrop(e, groupIndex, rowIdx)}
+                                >
                                     <div className="th-label">PAREJA {rowIdx + 1}</div>
                                     <div className="th-name">{resolveTeamName(t1Id)}</div>
                                 </th>
