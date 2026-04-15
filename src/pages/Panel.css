@@ -1,0 +1,242 @@
+.panel-hero-card {
+    background-color: var(--primary);
+    background-image: linear-gradient(135deg, #162a63 0%, #1e3a8a 100%);
+    border-radius: 12px;
+    padding: 40px;
+    color: white;
+    margin-bottom: 40px;
+    box-shadow: 0 10px 25px rgba(22, 42, 99, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.panel-hero-card::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    right: -5%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.hero-title {
+    color: white !important;
+    font-size: 2.25rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 16px !important;
+    letter-spacing: -0.5px;
+}
+
+.hero-subtitle {
+    color: #e2e8f0 !important;
+    font-size: 1rem;
+    max-width: 600px;
+    line-height: 1.5;
+    margin-bottom: 32px;
+}
+
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.sheet-select-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0 16px;
+    transition: all 0.2s ease;
+}
+
+.sheet-select-wrapper:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.sheet-icon {
+    color: white;
+    margin-right: 12px;
+}
+
+.sheet-select {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: white;
+    padding: 12px 32px 12px 0;
+    font-size: 0.95rem;
+    font-family: inherit;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+    width: 250px;
+}
+
+.sheet-select option {
+    color: var(--text-dark);
+    background: white;
+}
+
+.chevron-icon {
+    position: absolute;
+    right: 16px;
+    pointer-events: none;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.generate-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+}
+
+.generate-btn:not(:disabled) {
+    background-color: #10b981; /* Green success color */
+    border-color: #10b981;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.generate-btn:not(:disabled):hover {
+    background-color: #059669;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.generate-btn:not(:disabled):active {
+    transform: translateY(0);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.section-header h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.view-all-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: none;
+    border: none;
+    color: var(--primary);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 8px;
+    transition: opacity 0.2s;
+}
+
+.view-all-btn:hover {
+    opacity: 0.8;
+}
+
+.tournament-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.tournament-card {
+    background-color: var(--bg-white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tournament-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+    border-color: #cbd5e1;
+}
+
+.t-card-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.t-icon-wrapper {
+    background-color: #e0e7ff;
+    color: var(--primary);
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.t-info h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.t-info span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.t-card-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+}
+
+.t-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #10b981;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.more-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.more-btn:hover {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+}
