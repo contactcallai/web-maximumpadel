@@ -107,7 +107,8 @@
 }
 
 .generate-btn:not(:disabled) {
-    background-color: #10b981; /* Green success color */
+    background-color: #10b981;
+    /* Green success color */
     border-color: #10b981;
     color: white;
     cursor: pointer;
@@ -239,4 +240,200 @@
 .more-btn:hover {
     background-color: var(--bg-light);
     color: var(--text-dark);
+}
+
+/* Sección de Configuración de Cuadros */
+.config-section {
+    background-color: var(--bg-white, #ffffff);
+    border: 1px solid var(--border, #e2e8f0);
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 40px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.config-header {
+    margin-bottom: 24px;
+}
+
+.config-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 4px 0;
+}
+
+.config-header p {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin: 0;
+}
+
+.config-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    align-items: flex-end;
+}
+
+.config-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.config-label {
+    color: var(--text-dark);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-input-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.config-input {
+    background-color: var(--bg-white);
+    border: 1px solid var(--border);
+    color: var(--text-dark);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.config-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(22, 42, 99, 0.1);
+}
+
+.config-separator {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.action-generate-btn {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #10b981;
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    transition: all 0.2s ease;
+}
+
+.action-generate-btn:hover:not(:disabled) {
+    background-color: #059669;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+}
+
+.action-generate-btn:disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    border: 1px solid #e2e8f0;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN FIXES
+   ========================================= */
+
+.responses-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 0 4px;
+    gap: 16px;
+}
+
+.responses-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.responses-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.responses-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.responses-count {
+    color: #94a3b8;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* Reglas específicas para pantallas de móviles (hasta 768px) */
+@media (max-width: 768px) {
+
+    /* 1. Cabecera de inscripciones: Pasa a formato columna */
+    .responses-header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .responses-actions-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .responses-buttons {
+        flex-direction: column;
+        /* Apila los botones de sincronizar y añadir fila */
+        width: 100%;
+    }
+
+    .sync-btn-inline,
+    .add-row-btn {
+        width: 100%;
+        justify-content: center;
+        /* Centra el texto y el icono dentro del botón */
+    }
+
+    .responses-count {
+        align-self: flex-start;
+    }
+
+    /* 2. Fechas del Periodo del Torneo: Pasa a formato columna */
+    .config-input-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .config-input-row .config-separator {
+        text-align: center;
+        margin: -4px 0;
+    }
 }

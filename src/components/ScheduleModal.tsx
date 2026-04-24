@@ -54,9 +54,9 @@ export default function ScheduleModal({ isOpen, onClose, onSave, initialSchedule
                                     <Calendar size={14} style={{ marginRight: '4px' }} />
                                     Fecha y Hora del Partido
                                 </label>
-                                <input 
-                                    type="datetime-local" 
-                                    value={dateTime} 
+                                <input
+                                    type="datetime-local"
+                                    value={dateTime}
                                     onChange={(e) => setDateTime(e.target.value)}
                                     className="datetime-input"
                                 />
@@ -64,9 +64,18 @@ export default function ScheduleModal({ isOpen, onClose, onSave, initialSchedule
                         </div>
                     </div>
                 </div>
-                <div className="modal-footer">
-                    <button className="cancel-btn" onClick={onClose}>Cancelar</button>
-                    <button className="save-btn" onClick={handleSave}>Guardar Horario</button>
+                <div className="modal-footer" style={{ justifyContent: 'space-between', width: '100%' }}>
+                    <button
+                        className="delete-btn-text"
+                        onClick={() => onSave('')}
+                        style={{ color: '#ef4444', background: 'none', border: 'none', fontWeight: 600, cursor: 'pointer' }}
+                    >
+                        Eliminar Horario
+                    </button>
+                    <div style={{ display: 'flex', gap: '12px' }}>
+                        <button className="cancel-btn" onClick={onClose}>Cancelar</button>
+                        <button className="save-btn" onClick={handleSave}>Guardar Horario</button>
+                    </div>
                 </div>
             </div>
         </div>

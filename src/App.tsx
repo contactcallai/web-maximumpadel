@@ -6,14 +6,20 @@ import Panel from './pages/Panel'
 import MatchOrder from './pages/MatchOrder'
 import Inventory from './pages/Inventory'
 import Cuadros from './pages/Cuadros'
+import { AuthProvider, useAuth } from './context/AuthContext'
 
 // Placeholder components for routes
 
-function App() {
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
+function AppContent() {
+    const { isAuthenticated, setAccessToken, setIsAuthenticated } = useAuth()
+
+    const handleLoginSuccess = (token: string) => {
+        setAccessToken(token)
+        setIsAuthenticated(true)
+    }
 
     if (!isAuthenticated) {
-        return <Login onLogin={() => setIsAuthenticated(true)} />
+        return <Login onLogin={handleLoginSuccess} />
     }
 
     return (
@@ -27,6 +33,14 @@ function App() {
                 </Route>
             </Routes>
         </BrowserRouter>
+    )
+}
+
+function App() {
+    return (
+        <AuthProvider>
+            <AppContent />
+        </AuthProvider>
     )
 }
 

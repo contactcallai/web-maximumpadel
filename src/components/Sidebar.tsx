@@ -9,11 +9,11 @@ const NAV_ITEMS = [
     { path: '/cuadros', label: 'Gestión de Cuadros', icon: LayoutGrid },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }: { isOpen?: boolean, onClose?: () => void }) {
     const location = useLocation();
 
     return (
-        <aside className="sidebar">
+        <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header">
                 <div className="logo-container">
                     <img src="/koala-logo.png" alt="Koala Virtual Logo" className="logo-img" />

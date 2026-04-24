@@ -8,7 +8,7 @@
     padding: 0 32px;
     position: sticky;
     top: 0;
-    z-index: 5;
+    z-index: 1000;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
@@ -75,4 +75,22 @@
 
 .user-avatar:hover {
     transform: scale(1.05);
+}
+
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-dark);
+    cursor: pointer;
+    padding: 8px;
+    margin-right: auto;
+}
+
+@media (max-width: 768px) {
+    .mobile-menu-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 }

@@ -78,6 +78,14 @@
     margin-bottom: 24px;
     border-bottom: 1px solid var(--border);
     padding-bottom: 2px;
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    -webkit-overflow-scrolling: touch;
+}
+
+.category-selection-tabs::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
 }
 
 .cat-tab {
@@ -91,6 +99,8 @@
     transition: all 0.2s;
     position: relative;
     border-radius: 8px 8px 0 0;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .cat-tab:hover {
@@ -149,7 +159,8 @@
 .group-table-container {
     background: white;
     border-radius: 12px;
-    overflow: hidden;
+    overflow-x: auto;
+    max-width: 100%;
     box-shadow: 0 2px 10px rgba(0,0,0,0.03);
 }
 
@@ -179,21 +190,18 @@
     font-size: 1.125rem;
     text-align: left;
     padding-left: 24px;
+    position: sticky;
+    left: 0;
+    z-index: 3;
 }
 
 .group-table .row-header {
     text-align: left;
     padding-left: 24px;
     user-select: none;
-}
-
-.group-table .row-header.draggable {
-    cursor: grab;
-    transition: all 0.2s ease;
-}
-
-.group-table .row-header.draggable:active {
-    cursor: grabbing;
+    position: sticky;
+    left: 0;
+    z-index: 3;
 }
 
 .group-table .row-header.dragging {
@@ -204,8 +212,30 @@
 .group-table .row-header.drag-over {
     background-color: #f0f9ff;
     box-shadow: inset 0 0 0 2px var(--primary);
-    position: relative;
+    position: sticky; /* Keep it sticky */
     z-index: 5;
+}
+
+.drag-handle {
+    touch-action: none;
+    cursor: grab;
+    color: var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+    margin-left: -8px; /* Offset to align with the start of the cell nicely */
+    border-radius: 4px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.drag-handle:hover {
+    background-color: var(--bg-light);
+    color: var(--primary);
+}
+
+.drag-handle:active {
+    cursor: grabbing;
 }
 
 .th-label {
@@ -336,13 +366,14 @@
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.03);
     color: var(--text-dark);
+    overflow-x: auto;
+    max-width: 100%;
 }
 
 .section-title {
-    text-align: center;
+    text-align: left; /* Forzamos alineación a la izquierda */
     color: var(--primary);
     font-size: 1.25rem;
-    margin-bottom: 40px;
     position: relative;
     font-weight: 700;
 }
@@ -351,41 +382,101 @@
     content: '';
     position: absolute;
     bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0; /* Anclamos la línea a la izquierda */
+    /* Eliminamos el transform: translateX(-50%) que la centraba */
     width: 40px;
     height: 3px;
     background-color: var(--primary);
     border-radius: 2px;
 }
 
+/* 1. Contenedor Base: Alineación horizontal e igualación de alturas */
 .bracket-container {
     display: flex;
-    justify-content: center;
-    gap: 60px;
-    padding: 20px 0;
+    flex-direction: row;
+    align-items: stretch;
+    padding-top: 40px; 
+    padding-bottom: 20px;
+    min-height: 400px;
+    width: 100%; /* <-- AÑADIR ESTA LÍNEA */
 }
 
+/* 2. Columnas: Flexbox relativo con espacio para las líneas */
 .bracket-column {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    min-width: 300px;
+    position: relative;
+    padding: 0 24px; 
+    min-width: 280px;
+    flex: 1; /* <-- CRÍTICO: Obliga a la columna a expandirse */
 }
 
-.bracket-column.final-column {
-    justify-content: center;
+/* 3. Etiquetas de Ronda: Fuera del flujo para no alterar la matemática flex */
+.column-label {
+    position: absolute;
+    top: -30px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
 }
 
+/* 4. Wrappers de Partido: División Proporcional Estricta */
 .bracket-match-wrapper {
     position: relative;
-    margin-bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1; /* CRÍTICO: Obliga a cada partición a ocupar la misma fracción de la columna */
+    padding: 8px 0;
 }
 
-.bracket-column.final-column .bracket-match-wrapper {
-    margin-bottom: 0;
+/* 5. Línea de Entrada (Izquierda): Recibe al ganador de la ronda previa */
+.bracket-match-wrapper::before {
+    content: '';
+    position: absolute;
+    left: -24px; /* Exactamente el negative-padding de la columna */
+    width: 24px;
+    top: 50%;
+    border-top: 2px solid var(--border);
+    z-index: 0;
 }
 
+/* Oculta la línea de entrada para la primera ronda (no tienen rivales previos) */
+.bracket-column:first-child .bracket-match-wrapper::before {
+    display: none;
+}
+
+/* 6. Conectores de Salida (Derecha): Base compartida */
+.connector {
+    position: absolute;
+    right: -24px;
+    width: 24px;
+    border-right: 2px solid var(--border);
+    z-index: 0;
+}
+
+/* Conector Superior (Partido 1): Dibuja la esquina superior y baja hasta el límite de su sector */
+.connector-semi-1 {
+    top: 50%;
+    bottom: 0; 
+    border-top: 2px solid var(--border);
+    border-top-right-radius: 6px;
+}
+
+/* Conector Inferior (Partido 2): Sube desde su límite superior hasta la mitad de su sector */
+.connector-semi-2 {
+    top: 0; 
+    bottom: 50%;
+    border-bottom: 2px solid var(--border);
+    border-bottom-right-radius: 6px;
+    border-top: none; /* Asegura que no haya cierres falsos */
+}
+
+/* 7. Protección de Z-Index para la tarjeta principal */
 .bracket-card {
     background: white;
     border: 1px solid var(--border);
@@ -394,7 +485,7 @@
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
-    z-index: 2;
+    z-index: 2; /* Siempre por encima del trazado de líneas */
     box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     display: flex;
     align-items: stretch;
@@ -420,6 +511,9 @@
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .bracket-card-status {
@@ -439,35 +533,49 @@
     text-align: center;
 }
 
-/* Connectors using CSS borders */
-.connector {
-    position: absolute;
-    right: -40px; /* Half of the 80px gap */
-    width: 40px;
-    border-right: 2px solid var(--border);
-    z-index: 1;
+/* Drag & Drop para Brackets */
+.bracket-team-row.draggable-bracket {
+    padding: 4px 8px;
+    margin: -4px -8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
 }
 
-.connector-semi-1 {
+.bracket-drag {
+    padding: 2px;
+    margin-left: -4px;
+    margin-top: -2px;
+}
+
+.bracket-team-row.draggable-bracket.dragging {
+    opacity: 0.4;
+    background-color: #f1f5f9;
+}
+
+.bracket-team-row.draggable-bracket.drag-over {
+    background-color: #f0f9ff;
+    box-shadow: inset 0 0 0 2px var(--primary);
+    position: relative;
+    z-index: 5;
+}
+
+/* Atrapa el posicionamiento absoluto estrictamente dentro del contenedor derecho */
+.bracket-card-status {
+    position: relative;
+}
+
+/* Redefine el comportamiento de la "píldora" de acciones para la fase final */
+.bracket-card-status .match-actions {
+    position: absolute;
     top: 50%;
-    height: calc(50% + 20px); /* 20px is half of the 40px margin-bottom of wrapper */
-    border-top: 2px solid var(--border);
-    border-top-right-radius: 4px;
-}
-
-/* The horizontal line that goes TO the final card */
-.connector-semi-1::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: -40px; /* The other half of the gap */
-    width: 40px;
-    border-top: 2px solid var(--border);
-}
-
-.connector-semi-2 {
-    bottom: 50%;
-    height: calc(50% + 20px);
-    border-bottom: 2px solid var(--border);
-    border-bottom-right-radius: 4px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    
+    /* Fondo opaco recomendado para que el texto de "TBD" o la fecha no 
+       ensucie visualmente los botones al superponerse */
+    background-color: white; 
+    padding: 6px 12px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
