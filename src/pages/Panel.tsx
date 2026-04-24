@@ -329,6 +329,11 @@ export default function Panel() {
     };
 
     const handleGenerateBrackets = async () => {
+        if (dirtyRows.size > 0) {
+            setFetchError('Error: Tienes filas editadas o sin guardar. Sincroniza los cambios en la tabla antes de generar los cuadros.');
+            return;
+        }
+        
         if (!selectedTournament || !startDate || !endDate) {
             alert('Por favor, selecciona un torneo y define las fechas.');
             return;
